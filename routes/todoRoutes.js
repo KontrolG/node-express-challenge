@@ -1,29 +1,24 @@
+const router = require("express").Router();
 const {
   getAllTodos,
   createTodo,
+  parseIdParam,
   getTodo,
   updateTodo,
   deleteTodo
 } = require("../controllers/todoController");
 
-const route = {
-  withoutParameter: {
-    GET: getAllTodos,
-    POST: createTodo
-  },
-  withParameter: {
-    GET: getTodo,
-    PATCH: updateTodo,
-    DELETE: deleteTodo
-  }
-};
+router
+  .route("/")
+  .get(getAllTodos)
+  .post(createTodo);
 
-const urlHasParameter = url => url.startsWith("/todos/");
+router.param("id", parseIdParam);
 
-const use = (request, response) => {
-  const { url, method } = request;
-  const subRoute = urlHasParameter(url) ? "withParameter" : "withoutParameter";
-  route[subRoute][method](request, response);
-};
+router
+  .route("/:id")
+  .get(getTodo)
+  .patch(updateTodo)
+  .delete(deleteTodo);
 
-module.exports = { use };
+module.exports = router;

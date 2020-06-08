@@ -12,6 +12,11 @@ const createTodo = async (request, response) => {
 
 const insertTodo = ({ body: newTodo }) => todosModel.insertOne(newTodo);
 
+const parseIdParam = (request, response, next, value) => {
+  request.params.id = parseFloat(value);
+  next();
+};
+
 const getTodo = (request, response) => {
   const todo = getTodoFromRequestedId(request);
   if (todo) {
@@ -38,4 +43,11 @@ const updateTodo = async (request, response) => {
 const updateRequestedTodo = ({ params: query, body: newProperties }) =>
   todosModel.updateOne(query, newProperties);
 
-module.exports = { getAllTodos, createTodo, getTodo, updateTodo, deleteTodo };
+module.exports = {
+  getAllTodos,
+  createTodo,
+  parseIdParam,
+  getTodo,
+  updateTodo,
+  deleteTodo
+};
